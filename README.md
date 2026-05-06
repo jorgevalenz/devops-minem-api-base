@@ -44,3 +44,24 @@ dotnet test
 | POST   | /api/users      | Registrar nuevo usuario  |
 | PUT    | /api/users/{id} | Actualizar usuario       |
 | DELETE | /api/users/{id} | Eliminar usuario         |
+
+
+## API Reference
+
+### Modelo de datos: User
+| Campo    | Tipo   | Requerido | Descripción          |
+|----------|--------|-----------|----------------------|
+| Id       | int    | Auto      | Identificador único  |
+| Nombre   | string | Sí        | Nombre completo      |
+| Email    | string | Sí        | Email único          |
+
+### Endpoints disponibles
+| Método | Ruta              | Descripción                    |
+|--------|-------------------|--------------------------------|
+| GET    | /api/Users        | Listar todos los usuarios      |
+| POST   | /api/Users        | Crear nuevo usuario            |
+
+## Ejecutar localmente
+```bash
+dotnet run --project src/DevOpsMinem.API --urls http://localhost:5000
+```
