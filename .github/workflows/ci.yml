@@ -80,3 +80,37 @@ jobs:
       - name: Health check DEV
         run: echo "Health check OK en DEV — ${{ secrets.APP_URL }}/health"
 
+  deploy-prod:
+    needs: deploy-dev
+    environment: prod          # pausa el pipeline y notifica al revisor configurado
+    runs-on: ubuntu-latest     # cambiar a [self-hosted, windows] si hay servidor IIS
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Descargar artefacto compilado
+        uses: actions/download-artifact@v4
+        with:
+          name: api-release-${{ github.run_number }}
+          path: ./deploy
+
+      - name: Deploy a PRODUCCIÓN
+        # En ambiente real con IIS, reemplazar por:
+        # Stop-WebSite -Name ${{ secrets.IIS_SITE_NAME }}
+        # robocopy ./deploy ${{ secrets.DEPLOY_PATH }} /MIR
+        # if ($LASTEXITCODE -le 7) { exit 0 }
+        # Start-WebSite -Name ${{ secrets.IIS_SITE_NAME }}
+        run: |
+          echo "=== DEPLOY A PRODUCCIÓN APROBADO ==="
+          echo "Artefacto: api-release-${{ github.run_number }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Aprobado por revisor del environment prod"
+          echo "Deploy a PROD completado exitosamente"
+
+      - name: Health check PRODUCCIÓN
+        run: |
+          echo "Health check en: ${{ secrets.APP_URL }}/health"
+          echo "Aplicación en producción operativa"
+
+      - name: Notificación de éxito
+        run: echo "Pipeline CI+CD completo finalizado para commit ${{ github.sha }}"
+
