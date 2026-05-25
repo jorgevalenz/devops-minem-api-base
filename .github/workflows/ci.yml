@@ -81,7 +81,7 @@ jobs:
         run: echo "Health check OK en DEV — ${{ secrets.APP_URL }}/health"
 
   deploy-prod:
-    needs: deploy-dev
+    needs: deploy-dev          # necesita deploy-dev
     environment: prod          # pausa el pipeline y notifica al revisor configurado
     runs-on: ubuntu-latest     # cambiar a [self-hosted, windows] si hay servidor IIS
     if: github.ref == 'refs/heads/main'
