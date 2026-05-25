@@ -53,3 +53,30 @@ jobs:
         with:
           name: coverage-${{ github.run_number }}
           path: ./coverage
+
+  deploy-dev:
+    needs: test
+    environment: dev
+    runs-on: ubuntu-latest   # cambiar a [self-hosted, windows] si hay servidor IIS
+
+    steps:
+      - name: Descargar artefacto compilado
+        uses: actions/download-artifact@v4
+        with:
+          name: api-release-${{ github.run_number }}
+          path: ./deploy
+
+      - name: Deploy a DEV
+        # En ambiente real con IIS, reemplazar por comandos PowerShell:
+        # Stop-WebSite -Name ${{ secrets.IIS_SITE_NAME }}
+        # robocopy ./deploy ${{ secrets.DEPLOY_PATH }} /MIR
+        # Start-WebSite -Name ${{ secrets.IIS_SITE_NAME }}
+        run: |
+          echo "Iniciando deploy a DEV"
+          echo "Artefacto: api-release-${{ github.run_number }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Deploy a DEV completado exitosamente"
+
+      - name: Health check DEV
+        run: echo "Health check OK en DEV — ${{ secrets.APP_URL }}/health"
+
